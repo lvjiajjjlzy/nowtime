@@ -1,15 +1,16 @@
 {
+
   "schemaVersion": 1,
   "id": "nowtime",
   "version": "1.19.4",
   "name": "nowtime",
-
   "description": "",
   "authors": [
     "lvjiajjjahasas"
   ],
   "contact": {
-    "repo": "https://github.com/l1196/nowtime"
+    "sources": "https://github.com/lvjiajjjlzy/nowtime",
+    "repo": "https://github.com/lvjiajjjlzy/nowtime"
   },
   "license": "All-Rights-Reserved",
   "icon": "assets/nowtime/icon.png",
@@ -25,4 +26,5 @@
     "minecraft": "~1.19.4",
     "java": ">=17"
   }
+
 }
