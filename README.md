@@ -9,6 +9,8 @@ datapack get time
 nowtime：会实时更新当前时间的秒数。
 
 nowdate：会自动更新当前日期，前四位为年份，中间二位为月份，后二位为日期。例如：20230519。
+
+
 This mod provides a method for obtaining time for commands in my world, which can obtain the number of seconds of the current time and the current date.
 usage method:
 Create a scoreboard, nowtime, and nowdate, and you are ready to use it.
