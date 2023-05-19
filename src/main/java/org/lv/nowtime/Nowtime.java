@@ -17,6 +17,11 @@ import static net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.START_
 public class Nowtime extends Scoreboard implements ModInitializer {
 
 
+<<<<<<< HEAD
+=======
+    private byte repeat = 0;
+
+>>>>>>> 99d43a2bdcfe786998b9b7701e7c37991409870a
     @Override
     public void onInitialize() {
         Nowdate nowdate = new Nowdate();
