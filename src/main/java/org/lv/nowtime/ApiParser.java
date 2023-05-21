@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 public class ApiParser {
     private static String holidayName;
@@ -22,26 +23,48 @@ public class ApiParser {
         if (holidayElement != null && holidayElement.isJsonObject()) {
             JsonObject holidayObject = holidayElement.getAsJsonObject();
             JsonElement holidayNameElement = holidayObject.get("name");
-            holidayName = (holidayNameElement != null) ? holidayNameElement.getAsString() : "";
+            if (holidayNameElement != null) {
+                String holidayName = holidayNameElement.getAsString();                /* 检测是否为圣诞节 */
+                if (isChristmas()) {
+                    holidayName = "圣诞节";
+                }
+                ApiParser.holidayName = holidayName;
+            } else {
+                ApiParser.holidayName = "";
+            }
         } else {
-            holidayName = "";
+            ApiParser.holidayName = "";
         }
         return holidayName;
     }
 
     private static String readFromUrl(String url) throws IOException, InterruptedException {
-        int retryCount = 0, maxRetries = 3;
-        while (retryCount < maxRetries) try (var stream = new URL(url).openStream()) {
-            byte[] bytes = stream.readAllBytes();
-            return new String(bytes, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            retryCount++;
-            if (retryCount == maxRetries || !(e instanceof java.net.HttpRetryException)) throw e;
-            else Thread.sleep(1000);
-            if (((java.net.HttpRetryException) e).responseCode() == 429) {
-                return "0";
+        int retryCount = 0, maxRetries = 1;
+        while (retryCount < maxRetries) {
+            try (var stream = new URL(url).openStream()) {
+                byte[] bytes = stream.readAllBytes();
+                return new String(bytes, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                retryCount++;
+                if (retryCount == maxRetries) {
+                    throw e;
+                }
+                // 判断是否为网络连接问题
+                if (e instanceof java.net.ConnectException
+                        || e instanceof java.net.SocketTimeoutException
+                        || e instanceof java.net.UnknownHostException) {
+                    Thread.sleep(1000000); // 休眠1000秒后进行重试
+                } else {
+                    throw e;
+                }
             }
         }
-        throw new IOException("Failed to read data from URL: " + url);
+        throw new IOException("获取节日信息链接: " + url);
+    }
+
+    private static boolean isChristmas() {
+        LocalDate today = LocalDate.now();
+        int month = today.getMonthValue(), day = today.getDayOfMonth();
+        return (month == 12 && day >= 24 && day <= 26);
     }
 }
