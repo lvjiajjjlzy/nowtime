@@ -1,6 +1,5 @@
 package org.lv.nowtime;
 
-
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.scoreboard.Scoreboard;
@@ -15,40 +14,36 @@ import static net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.START_
 
 
 public class Nowtime extends Scoreboard implements ModInitializer {
-
-
-<<<<<<< HEAD
-=======
-    private byte repeat = 0;
-
->>>>>>> 99d43a2bdcfe786998b9b7701e7c37991409870a
     @Override
     public void onInitialize() {
         Nowdate nowdate = new Nowdate();
+        Festival festival = new Festival();
+        try {
+            festival.tick();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
         ServerTickEvents.START_SERVER_TICK.register(server -> nowdate.tick());
 
         START_SERVER_TICK.register(server -> {
-            LocalTime now = LocalTime.now();
-            int time = now.toSecondOfDay();
+                    LocalTime now = LocalTime.now();
+                    int time = now.toSecondOfDay();
 
-            List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
-            ScoreboardObjective objective = server.getScoreboard().getObjective("nowtime");
+                    List<ServerPlayerEntity> players = server.getPlayerManager().getPlayerList();
+                    ScoreboardObjective objective = server.getScoreboard().getObjective("nowtime");
 
-            for (ServerPlayerEntity player : players) {
-                String playerName = player.getEntityName();
-                ScoreboardPlayerScore scoreboardPlayerScore = server.getScoreboard().getPlayerScore(playerName, objective);
-                scoreboardPlayerScore.setScore(time);
-            }
-        });
+                    for (ServerPlayerEntity player : players) {
+                        String playerName = player.getEntityName();
+                        ScoreboardPlayerScore scoreboardPlayerScore = server.getScoreboard().getPlayerScore(playerName, objective);
+                        scoreboardPlayerScore.setScore(time);
+                    }
+                }
+        );
 
-
-
-
- /*       ServerWorldEvents.LOAD.register((server, world) -> {
-commands?
-        });
-
-*/
     }
+
 }
+
 
